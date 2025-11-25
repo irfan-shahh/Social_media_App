@@ -1,0 +1,23 @@
+
+const express=require('express')
+const router=express.Router()
+const {loginUser,registerUser,verifyUser,logoutUser}=require('../controllers/userController')
+const {addPost,getAllPosts,getMyPosts,deletePost,toggleLike,commentPost,deleteComment,getLikedUsers,getProfileDetails,updateProfilePic} =require('../controllers/postController')
+const upload=require('../middleware/upload')
+const authenticate=require('../middleware/authenticate')
+
+router.post('/register',registerUser)
+router.post('/login',loginUser)
+router.post('/logout',authenticate,logoutUser)
+router.post('/posts',authenticate,upload.single('image'),addPost)  
+router.get('/posts',getAllPosts) 
+router.get('/posts/mine',authenticate,getMyPosts)
+router.get('/verify',verifyUser)
+router.delete('/posts/:id',authenticate,deletePost)
+router.post('/posts/likes/:id',authenticate,toggleLike)
+router.post('/posts/comments/:id',authenticate,commentPost)
+router.delete('/posts/comments/:commentId',authenticate,deleteComment)
+router.get('/posts/showLikes/:postId',authenticate,getLikedUsers)
+router.get('/user/profile',authenticate,getProfileDetails)
+router.post('/user/updateProfilePic',authenticate,upload.single('profilePic'),updateProfilePic)
+module.exports=router;
